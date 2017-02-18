@@ -1,0 +1,8 @@
+_Store
+.DS_Store?
+
+# exclude everything
+audio/*
+
+# exception to the rule
+!audio/.gitkeep

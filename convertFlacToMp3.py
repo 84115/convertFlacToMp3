@@ -2,36 +2,46 @@
 import os
 import sys
 
-ffmpeg = "ffmpeg -i"
-options = "-ab 320k -ac 2 -ar 48000"
-export = "export"
-space = " "
-DS = "\\"
-escape = "\"" #the "\"" are to allow ffmpeg to handle flac & path names which contain spaces!
+ffmpeg = "ffmpeg -i "
+options = " -ab 320k -ac 2 -ar 48000 "
+source = "audio"
+DS = "/"
+quote = "\"" #the "\"" are to allow ffmpeg to handle flac & path names which contain spaces!
 
 def convertFlacToMp3(parent):
-    for child in parent:
-        path = os.getcwd() + child
-        mp3s = os.listdir(path)
-        output = os.mkdir(path.join([DS, export]))
+    for artist in os.listdir(parent):
+        artist_path = concat([parent, DS, artist])
 
-        print "Converting files in: " + path
+        if isntDsStore(artist_path) and os.path.isdir(artist_path):
+            for album in os.listdir(artist_path):
+                album_path = concat([artist_path, DS, album])
 
-        for flac in flacs:
+                if isntDsStore(album_path):
+                    for song in os.listdir(album_path):
 
-            if ".flac" in flac:
-                flac = flac.decode("UTF-8")
-                mp3 = flac.replace(".flac", ".mp3")
+                        if ".flac" in song:
+                            flac = song.decode("UTF-8")
+                            mp3 = flac.replace(".flac", ".mp3")
 
-                print "--" + flac + " >>> " + mp3
+                            execute = concat([
+                                ffmpeg,
+                                quote, album_path, DS, flac, quote,
+                                options,
+                                quote, album_path, DS, "out", DS, mp3, quote])
 
-                execute = ffmpeg.join([
-                    space, escape, path, DS, flac, escape, space,
-                    options, space,
-                    escape, path, DS, out, DS, mp3, escape])
+                            print os.system(execute)
 
-                print os.system(execute)
+
+def isntDsStore(item):
+    if ".DS_Store" in item:
+        return False
+    else:
+        return True
+
+
+def concat(words):
+    return "".join(words)
 
 
 if __name__ == "__main__":
-    convertFlacToMp3(os.listdir(os.getcwd()))
+    convertFlacToMp3(os.getcwd() + DS + source)
