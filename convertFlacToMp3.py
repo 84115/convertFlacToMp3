@@ -27,7 +27,7 @@ def convertFlacToMp3(parent):
                                 ffmpeg,
                                 quote, album_path, DS, flac, quote,
                                 options,
-                                quote, album_path, DS, "out", DS, mp3, quote])
+                                quote, album_path, DS, mp3, quote])
 
                             print os.system(execute)
 
